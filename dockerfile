@@ -45,8 +45,6 @@ RUN apk add --update --no-cache \
     icu-dev \
     freetype-dev
 
-RUN php -v
-
 # Configure & Install Extension
 RUN docker-php-ext-configure \
     opcache --enable-opcache &&\
@@ -76,6 +74,8 @@ ENV PATH="./vendor/bin:$PATH"
 
 COPY opcache.ini $PHP_INI_DIR/conf.d/
 COPY php.ini $PHP_INI_DIR/conf.d/
+
+RUN chown -R www-data:www-data /var/lib/nginx
 
 # Setup Crond and Supervisor by default
 RUN echo '*  *  *  *  * /usr/local/bin/php  /var/www/artisan schedule:run >> /dev/null 2>&1' > /etc/crontabs/root && mkdir /etc/supervisor.d
